@@ -1,0 +1,27 @@
+{
+  "canonical": [
+    "Food",
+    "Transport",
+    "Groceries",
+    "Shopping/Online",
+    "Bills",
+    "Entertainment",
+    "Health",
+    "Travel",
+    "Education",
+    "Fees",
+    "Gifts",
+    "Uncategorized"
+  ],
+  "aliases": {
+    "food": "Food",
+    "transport": "Transport",
+    "grab": "Transport",
+    "bus": "Transport",
+    "mrt": "Transport",
+    "shopping": "Shopping/Online",
+    "online": "Shopping/Online",
+    "uncategorised": "Uncategorized",
+    "uncategorized": "Uncategorized"
+  }
+}

@@ -4,6 +4,11 @@
 
 Swee Sen preference: **no automatic parsing/commits**.
 
+### Categories (canonical + controlled expansion)
+- Canonical list lives in `categories.json` (committed to repo)
+- Batch creation normalizes casing/aliases to prevent duplicates like `food` vs `Food`
+- Unknown categories are forced to `Uncategorized` and flagged for review, with the suggestion stored as `proposedCategory:...` in notes
+
 Nightly flow (10:45pm SGT):
 1) `npm run ingest:raw` — fetch + store raw emails only (dedupe)
 2) `npm run propose` — output stored raw emails for an LLM to read

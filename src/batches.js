@@ -1,6 +1,7 @@
 import 'dotenv/config';
 import fs from 'node:fs';
 import { openDb } from './db.js';
+import { loadCategories, normalizeCategory } from './categories.js';
 
 function usage() {
   console.log('Usage:');
@@ -48,6 +49,8 @@ if (cmd === 'create') {
     .run('pending', nowIso(), null, null);
   const batchId = batchInfo.lastInsertRowid;
 
+  const catSpec = loadCategories();
+
   const ins = db.prepare(`
     insert into proposed_transactions(
       batch_id, raw_email_id,
@@ -70,6 +73,18 @@ if (cmd === 'create') {
 
   const tx = db.transaction((items) => {
     for (const p of items) {
+      const norm = catSpec.ok
+        ? normalizeCategory(p.category ?? 'Uncategorized', catSpec)
+        : { category: (p.category ?? 'Uncategorized'), unknown: false, changed: false, original: (p.category ?? '') };
+
+      // If the category is unknown, force Uncategorized + needs_review.
+      const needsReview = (p.needsReview ? 1 : 0) || (norm.unknown ? 1 : 0);
+
+      // Preserve suggested new categories in notes for human approval later.
+      const notes = [p.notes ?? ''];
+      if (norm.unknown && norm.original) notes.push(`proposedCategory:${norm.original}`);
+      if (p.proposedCategory) notes.push(`proposedCategory:${p.proposedCategory}`);
+
       ins.run({
         batchId,
         rawEmailId: p.rawEmailId ?? null,
@@ -82,13 +97,13 @@ if (cmd === 'create') {
         fxProvider: p.fxProvider ?? null,
         merchantRaw: p.merchantRaw ?? null,
         merchantNorm: p.merchantNorm ?? null,
-        category: p.category ?? 'Uncategorized',
+        category: norm.category ?? 'Uncategorized',
         source: p.source ?? 'gmail',
         accountFrom: p.accountFrom ?? null,
         accountTo: p.accountTo ?? null,
-        notes: p.notes ?? '',
+        notes: notes.filter(Boolean).join(' | '),
         confidence: p.confidence == null ? null : Number(p.confidence),
-        needsReview: p.needsReview ? 1 : 0,
+        needsReview,
         proposalJson: JSON.stringify(p),
         createdAt: nowIso(),
       });
