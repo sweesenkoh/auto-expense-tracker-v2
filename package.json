@@ -1,0 +1,17 @@
+{
+  "name": "auto-expense-tracker-v2",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "ingest": "node src/ingest.js",
+    "query": "node src/query.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "imapflow": "^1.0.164",
+    "mailparser": "^3.7.2",
+    "better-sqlite3": "^11.6.0",
+    "node-fetch": "^3.3.2"
+  }
+}
