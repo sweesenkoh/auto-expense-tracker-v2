@@ -1,11 +1,15 @@
 {
   "name": "auto-expense-tracker-v2",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
   "scripts": {
     "ingest": "node src/ingest.js",
-    "query": "node src/query.js"
+    "ingest:raw": "node src/ingest_raw.js",
+    "propose": "node src/propose.js",
+    "batches": "node src/batches.js",
+    "query": "node src/query.js",
+    "test": "vitest run"
   },
   "dependencies": {
     "dotenv": "^16.4.5",
@@ -13,5 +17,8 @@
     "mailparser": "^3.7.2",
     "better-sqlite3": "^11.6.0",
     "node-fetch": "^3.3.2"
+  },
+  "devDependencies": {
+    "vitest": "^2.1.8"
   }
 }
